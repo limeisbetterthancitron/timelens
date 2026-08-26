@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.limeisbetterthancitron</groupId>
+    <artifactId>timelens</artifactId>
+    <version>0.1.0-alpha.1</version>
+    <packaging>jar</packaging>
+
+    <name>TimeLens</name>
+    <description>Explore your Minecraft world's past.</description>
+    <url>https://github.com/limeisbetterthancitron/timelens</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/limeisbetterthancitron/timelens/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>limeisbetterthancitron</id>
+            <name>Lime</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/limeisbetterthancitron/timelens.git</connection>
+        <developerConnection>scm:git:git@github.com:limeisbetterthancitron/timelens.git</developerConnection>
+        <url>https://github.com/limeisbetterthancitron/timelens</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <paper.version>1.21.11-R0.1-SNAPSHOT</paper.version>
+        <coreprotect.version>24.0</coreprotect.version>
+        <junit.version>5.14.3</junit.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>playpro</id>
+            <url>https://maven.playpro.com</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Supplied by the server at runtime; never shaded into the plugin jar. -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Supplied by the server at runtime. TimeLens only touches CoreProtect's public API. -->
+        <dependency>
+            <groupId>net.coreprotect</groupId>
+            <artifactId>coreprotect</artifactId>
+            <version>${coreprotect.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <!-- CoreProtect's logging stack is irrelevant to the API surface TimeLens uses. -->
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>TimeLens-${project.version}</finalName>
+
+        <resources>
+            <!-- Filtered so plugin.yml can inherit ${project.version} from these coordinates. -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

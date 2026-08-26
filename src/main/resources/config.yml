@@ -1,0 +1,65 @@
+# TimeLens configuration
+#
+# TimeLens never modifies the world. Everything below only affects how much history is read and
+# how large a picture is sent to the player who asked for it.
+
+view:
+  # How far the historical view reaches horizontally (X and Z) from the player, in blocks.
+  # If a view ever looks like it is missing part of a build, this is almost always why:
+  # anything further away than this is simply not reconstructed.
+  radius: 48
+
+  # How far the historical view reaches vertically (Y) from the player, in blocks.
+  vertical-radius: 48
+
+  # The ceiling for the two values above, and for the optional radius a player can pass to
+  # /timelens.
+  #
+  # Radius is a poor measure of cost on its own: what matters is how much recorded history sits
+  # inside the volume. A radius of 96 over a quiet forest is cheap; the same radius over a busy
+  # town centre is not. history.maximum-results below is the real safety brake — raise this only
+  # alongside testing on your own world.
+  maximum-radius: 96
+
+  # Hold the viewer at the spot the view was taken from until they run /timelens exit.
+  #
+  # Historical blocks are visual only, so the server still uses the real world for collision:
+  # with movement free you can stand inside what looks like stone, or hover over what looks like
+  # air. Freezing avoids that mismatch entirely. Looking around is always allowed, and normal
+  # movement returns the moment the view ends.
+  freeze-movement: true
+
+  # Stop the viewer breaking, placing, using buckets and interacting with blocks while a view is
+  # open. Leave this on: acting on a block you can see but the server cannot is the fastest way
+  # to desynchronise a client from the real world.
+  block-interactions: true
+
+
+history:
+  # The furthest back a player may ask to see. Accepts s, m, h, d and w suffixes.
+  # Months are not supported because their length is ambiguous.
+  #
+  # This also bounds calendar dates: /timelens 2026-08-20 is refused if that date is further
+  # back than this.
+  #
+  # TIMEZONE: dates and times are read in the SERVER's timezone, not the player's. A host
+  # running in UTC while its players are in Europe will resolve "/timelens 14:30" to 14:30 UTC.
+  # Check the server's clock before reporting a wrong-time bug.
+  maximum-lookback: 30d
+
+  # Refuse to build a view from more recorded changes than this. A request over the limit is
+  # rejected with advice to use a shorter time range, rather than being rendered slowly.
+  #
+  # This is the setting that actually protects tick time. The database lookup runs off the main
+  # thread, but working out which blocks to send does not: it reads live world state, and that
+  # cost is roughly linear in the number of blocks.
+  #
+  # Measured on Paper 1.21.11: roughly 0.5 to 1.2 microseconds of main-thread work per block
+  # sent, worst observed 2.8ms for 2400 blocks. TimeLens also applies its own internal cap of
+  # 12000 rendered blocks, which is the tighter brake of the two, because the number of recorded
+  # changes is a poor predictor of how many distinct blocks they resolve to.
+  maximum-results: 25000
+
+messages:
+  # MiniMessage markup placed in front of every TimeLens message.
+  prefix: "<green>TimeLens <dark_gray>›</dark_gray> "

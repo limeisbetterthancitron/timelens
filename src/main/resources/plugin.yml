@@ -1,0 +1,24 @@
+name: TimeLens
+version: ${project.version}
+main: io.github.limeisbetterthancitron.timelens.TimeLensPlugin
+api-version: '1.21.11'
+author: Lime
+website: https://github.com/limeisbetterthancitron/timelens
+description: Explore your Minecraft world's past.
+depend: [CoreProtect]
+
+commands:
+  timelens:
+    description: View how the area around you looked in the past.
+    usage: /timelens <when> [radius] | exit | status | help
+
+# Permissions are checked in code rather than declared on the command itself, so TimeLens can
+# explain a refusal in its own voice. Both default to op and can be granted with any permission
+# plugin.
+permissions:
+  timelens.use:
+    description: Allows viewing world history with /timelens.
+    default: op
+  timelens.admin:
+    description: Reserved for future TimeLens administration features.
+    default: op

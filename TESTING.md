@@ -11,6 +11,38 @@ as part of the work, not as a formality afterwards.
 
 Run all of it before tagging a release.
 
+## Result table
+
+Fill this in as you go. Everything above the line is the alpha.1 gate.
+
+| Test | Expected | Result |
+|---|---|---|
+| A enters historical view | A sees past | |
+| B stands beside A | **B sees present** | |
+| B modifies unrelated block | B remains normal | |
+| B modifies A's faked coordinate | *observe what A receives* | |
+| A exits | current real state restored | |
+| ~1k blocks rendered | no meaningful hitch | |
+| ~5k blocks rendered | record hitch / MSPT | |
+| ~12k blocks rendered | record hitch / MSPT | |
+| Door / bed | both halves visually correct | |
+| Waterlogged block | block data correct | |
+| Piston / redstone | no broken snapshot state | |
+| Hard server stop | no persistent player changes | |
+| Reconnect | player completely normal | |
+
+For the client figures, precision does not matter. What matters is which of these it looks like:
+
+    1k  -> imperceptible
+    5k  -> tiny hitch
+    12k -> noticeable but acceptable
+
+versus `12k -> client freezes for two seconds`. If 12k is bad, lower the cap. Do not start an
+optimisation project around a number chosen by hand.
+
+**Do the isolation test first.** If A sees the past while B sees the present, the single most
+important promise of TimeLens is proven and everything else is detail.
+
 ## Setup
 
 - Paper 1.21.11, CoreProtect 24.0+ (the release jar, **not** the Maven artifact — that one is a
@@ -45,15 +77,20 @@ Expect it to happen. The test is to confirm whether it does, and how visible it 
 - [ ] Repeat with B *breaking* a block that A sees as present
 - [ ] A runs `/timelens exit` — A must see B's **current** state either way
 
-If the fake state is overwritten, do not reach for packet interception. The cheaper options,
-roughly in order of preference for an alpha:
+If the fake state is overwritten, do not reach for packet interception, and do not reach for
+self-healing either. Re-sending the one coordinate is easy; reliably detecting *every* way the
+real world can change is not. Blocks move through player edits, pistons, explosions, fluids,
+fire, physics, entity actions, other plugins, commands and world-editing tools. Chasing all of
+them means building a second change-tracking system purely to maintain an illusion.
 
-1. Re-send the historical block for that one coordinate when a real change lands inside a live
-   session — one packet, self-healing, no packet library.
-2. End the view with an explanation when the viewed area materially changes.
-3. Document it and leave it.
+**Preferred policy for alpha.1: end the view and say why.**
 
-Decide only after seeing the behaviour.
+    TimeLens › The viewed area changed in the present world.
+    TimeLens › Historical view closed to prevent visual inconsistencies.
+
+Honest, bounded, and impossible to get subtly wrong. Self-healing sessions can come later, once
+the update behaviour is properly understood. Implement only after the test shows what actually
+happens.
 
 ## 2b. Chunk and state refresh
 

@@ -54,7 +54,7 @@ public final class TargetParser {
         HistoryTarget target = new HistoryTarget.Absolute(moment);
         if (target.timestampMillis(nowMillis) > nowMillis) {
             throw new InvalidTimeException(candidate,
-                    "The world has no history from " + target.describe() + " yet — that is in the future.");
+                    "The world has no history from " + target.describe() + " yet. That is in the future.");
         }
         return target;
     }

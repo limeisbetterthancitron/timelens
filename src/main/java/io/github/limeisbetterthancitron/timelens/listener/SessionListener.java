@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * they collide with cannot drift apart.
  *
  * <p>The hold is done purely by rewriting movement events back to the anchor. Nothing about the
- * player is altered — no gamemode, no abilities, no speeds — so there is no TimeLens state that
+ * player is altered, neither gamemode nor abilities nor speeds, so there is no TimeLens state that
  * could survive a crash and follow them into their next session. {@code /timelens exit} always
  * remains available.
  */
@@ -44,7 +44,7 @@ public final class SessionListener implements Listener {
 
     /**
      * How far a teleport may move the viewer before the view is considered abandoned. Only a
-     * nudge — anything further has left the area the snapshot covers.
+     * nudge, since anything further has left the area the snapshot covers.
      */
     private static final double ANCHOR_LEASH_BLOCKS = 1.0D;
 

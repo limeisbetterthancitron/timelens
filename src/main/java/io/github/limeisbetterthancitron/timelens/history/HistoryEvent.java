@@ -11,7 +11,7 @@ import java.util.Optional;
  * @param position        where the change happened
  * @param action          whether a block was added or taken away
  * @param timestampMillis when the change happened, in milliseconds since the epoch
- * @param state           the block the change concerns — the block that was placed for
+ * @param state           the block the change concerns, meaning the block that was placed for
  *                        {@link HistoryAction#PLACE}, the block that was taken away for
  *                        {@link HistoryAction#REMOVE}. Empty when the backend recorded the
  *                        change but not a usable block state; see

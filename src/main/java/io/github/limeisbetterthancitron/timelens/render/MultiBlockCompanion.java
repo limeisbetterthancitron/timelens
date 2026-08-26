@@ -16,7 +16,7 @@ import java.util.Optional;
  * <p>History backends record a door, bed or tall plant as a single entry at its base block, so a
  * reconstruction that replays only what was recorded produces half a door hanging in the air.
  * Deriving the missing half from the recorded one is what makes those structures render
- * correctly — and clearing the leftover half is what stops the reverse artefact when a structure
+ * correctly, and clearing the leftover half is what stops the reverse artefact when a structure
  * is being taken out of the view.
  *
  * @param position where the other half belongs

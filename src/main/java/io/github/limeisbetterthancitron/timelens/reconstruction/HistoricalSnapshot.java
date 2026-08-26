@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * <p>Only positions that some recorded change touched appear here; everywhere else the present
  * world is already the correct answer. The states are what the reconstruction concluded, not
- * yet a diff against the live world — that comparison happens on the server thread at render
+ * yet a diff against the live world. That comparison happens on the server thread at render
  * time, because the world may have moved on since the query started.
  *
  * @param targetTimestampMillis the moment being reconstructed, in milliseconds since the epoch

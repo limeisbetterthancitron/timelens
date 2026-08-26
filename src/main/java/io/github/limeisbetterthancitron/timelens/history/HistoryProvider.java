@@ -14,7 +14,7 @@ public interface HistoryProvider {
     /**
      * Returns every recorded block change inside the query's bounds, newest first.
      *
-     * <p>Called on a worker thread — implementations must not touch Bukkit world state.
+     * <p>Called on a worker thread, so implementations must not touch Bukkit world state.
      *
      * @throws HistoryResultLimitException if more changes matched than the query allows
      * @throws HistoryLookupException      if the backend could not be queried

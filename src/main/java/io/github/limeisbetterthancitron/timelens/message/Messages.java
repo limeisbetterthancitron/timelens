@@ -157,7 +157,7 @@ public final class Messages {
     }
 
     public Component interactionBlocked() {
-        return Component.text("Blocked while viewing the past — use /timelens exit first.", BODY);
+        return Component.text("Blocked while viewing the past. Use /timelens exit first.", BODY);
     }
 
     public Component help() {

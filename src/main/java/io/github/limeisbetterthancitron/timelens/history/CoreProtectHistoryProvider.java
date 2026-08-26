@@ -67,8 +67,8 @@ public final class CoreProtectHistoryProvider implements HistoryProvider {
     }
 
     /**
-     * CoreProtect edits the action list it is handed rather than copying it — it appends to it
-     * and strips entries above id 3 — so the list must be both mutable and freshly built. A
+     * CoreProtect edits the action list it is handed rather than copying it. It appends to the
+     * list and strips entries above id 3, so the list must be both mutable and freshly built. A
      * shared constant would throw on the first lookup and be silently corrupted on later ones.
      */
     private static List<Integer> mutableBlockActions() {

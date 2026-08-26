@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Shows and withdraws historical block states for a single viewer.
  *
  * <p>Every method here must run on the server thread: they read live world state and send
- * packets. Nothing in this class writes to the world — the states are delivered straight to one
+ * packets. Nothing in this class writes to the world. The states are delivered straight to one
  * player's client with {@link Player#sendMultiBlockChange(Map)}, which Paper documents as
  * faking a packet per chunk section without changing the world. Other players, and the server
  * itself, continue to see and use the real blocks.
@@ -84,8 +84,8 @@ public final class HistoricalRenderer {
     /**
      * Works out what a viewer would be sent, without sending it.
      *
-     * <p>Separated from {@link #render} because this half is where the cost is — a world read
-     * and a block-data parse per position — while the send itself is one call. Splitting them
+     * <p>Separated from {@link #render} because this half is where the cost is, being a world
+     * read and a block-data parse per position, while the send itself is one call. Splitting them
      * makes that cost measurable on its own. Server thread only: it reads live world state.
      */
     public PreparedView prepare(World world, HistoricalSnapshot snapshot) {

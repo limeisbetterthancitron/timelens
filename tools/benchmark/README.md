@@ -5,8 +5,8 @@ measured without two Minecraft clients. Not part of the Maven build and not ship
 
 ## Why it exists
 
-`HistoricalRenderer.prepare()` is where the main-thread cost lives, and it needs no `Player` —
-only the packet send does. This harness calls it with real CoreProtect data and reports the
+`HistoricalRenderer.prepare()` is where the main-thread cost lives, and it needs no `Player`.
+Only the packet send does. This harness calls it with real CoreProtect data and reports the
 distribution of its cost.
 
 ## Invariants

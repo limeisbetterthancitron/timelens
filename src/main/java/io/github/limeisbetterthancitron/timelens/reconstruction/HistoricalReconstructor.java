@@ -24,7 +24,7 @@ import java.util.Optional;
  * </ul>
  *
  * <p>Both inverses overwrite the position outright rather than adjusting it, so the value left
- * after the walk is the one contributed by the <em>oldest</em> change — which is precisely the
+ * after the walk is the one contributed by the <em>oldest</em> change, which is precisely the
  * state the position held just before that change, i.e. at the requested time. A block that was
  * replaced shows up as a removal followed by a placement; undoing the placement clears it and
  * undoing the older removal then restores the block that was replaced.

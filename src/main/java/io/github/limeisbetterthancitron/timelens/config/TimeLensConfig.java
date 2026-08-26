@@ -44,8 +44,8 @@ public record TimeLensConfig(int radius,
     private static final String DEFAULT_PREFIX = "<green>TimeLens <dark_gray>›</dark_gray> ";
 
     /**
-     * A hard ceiling for the configured maximum. Radius is a poor proxy for cost — what actually
-     * matters is how much recorded history sits inside the volume — so
+     * A hard ceiling for the configured maximum. Radius is a poor proxy for cost, because what
+     * actually matters is how much recorded history sits inside the volume, so
      * {@code history.maximum-results} is the real brake and this only stops absurd values.
      */
     private static final int ABSOLUTE_MAX_RADIUS = 256;

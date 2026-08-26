@@ -11,7 +11,7 @@ import java.util.Objects;
  * The string is turned back into real block data on the server thread, at render time.
  *
  * <p>Two states are equal when their strings are equal, so every string in the system must come
- * from the same source — {@code BlockData#getAsString()} — for comparisons to mean anything.
+ * from the same source, {@code BlockData#getAsString()}, for comparisons to mean anything.
  */
 public record HistoricalBlockState(String blockData) {
 

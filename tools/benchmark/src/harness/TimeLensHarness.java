@@ -78,7 +78,7 @@ public final class TimeLensHarness extends JavaPlugin {
                 snapshots.add(null);
             }
         }
-        // prepare() reads live world state, so it has to go back to the server thread — which is
+        // prepare() reads live world state, so it has to go back to the server thread, which is
         // exactly where its cost would land during a real /timelens.
         getServer().getScheduler().runTask(this, () -> measure(world, renderer, queries, snapshots));
     }

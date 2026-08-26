@@ -8,8 +8,8 @@ Thanks for taking an interest in TimeLens.
 
 TimeLens is a visualisation layer. It reads history and draws it on one player's client. If a
 change would write blocks to the world, mutate CoreProtect's data, or make other players see
-something that is not really there, it does not belong in this project — no matter how useful it
-seems. Rollback tools already exist; TimeLens is not one.
+something that is not really there, it does not belong in this project, no matter how useful it
+seems. Rollback tools already exist, and TimeLens is not one of them.
 
 Everything else in this document is negotiable. That rule is not.
 
@@ -60,12 +60,12 @@ If you add a stage, say in its Javadoc which thread owns it.
 
 ## Code style
 
-- Java 21 language level, four-space indent, 120-column soft limit.
+- Java 21 language level, four-space indentation, 120-column soft limit.
 - No Lombok, no Kotlin, no new dependencies without a clear reason.
 - Small classes with one responsibility. No thousand-line managers.
 - Records for immutable domain data.
-- No wildcard imports, no dead or commented-out code, no `System.out.println` — use the plugin
-  logger.
+- No wildcard imports, no dead code and no commented-out code. Use the plugin logger rather
+  than `System.out.println`.
 - Comments explain **why**, not what. If the code needs a comment to say what it does, rename
   something instead.
 - Validate anything nullable that comes from an external API.
@@ -76,7 +76,7 @@ If you add a stage, say in its Javadoc which thread owns it.
 
 The reconstruction algorithm and the duration parser are unit tested, and both must stay that
 way. If you change how history is reversed, add the scenario to
-`HistoricalReconstructorTest` first — the scenarios there are the specification.
+`HistoricalReconstructorTest` first, because the scenarios there are the specification.
 
 Run `mvn clean verify` before opening a pull request. CI runs the same command.
 

@@ -25,7 +25,7 @@ First public test release. Not yet proven on production servers.
   editing the configuration.
 - Views report the radius they used, because a view smaller than the build is the usual reason
   one looks incomplete.
-- Two-block structures — doors, beds, tall plants, pitcher crops and small dripleaf — are kept
+- Two-block structures, doors, beds, tall plants, pitcher crops and small dripleaf, are kept
   whole. History records only their base block, so the partner half is derived when one is shown
   and cleared when one is taken away, instead of leaving a broken door or floating bed half.
 - Tab completion for subcommands and common time values.

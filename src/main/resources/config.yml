@@ -17,8 +17,8 @@ view:
   #
   # Radius is a poor measure of cost on its own: what matters is how much recorded history sits
   # inside the volume. A radius of 96 over a quiet forest is cheap; the same radius over a busy
-  # town centre is not. history.maximum-results below is the real safety brake — raise this only
-  # alongside testing on your own world.
+  # town centre is not. The history.maximum-results setting below is the real safety brake, so
+  # raise this one only alongside testing on your own world.
   maximum-radius: 96
 
   # Hold the viewer at the spot the view was taken from until they run /timelens exit.

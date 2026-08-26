@@ -1,13 +1,13 @@
 # Runtime validation
 
 TimeLens is code-complete and unit tested, but unit tests cannot prove the thing it actually
-promises: that a historical view exists only on one player's screen. That needs two accounts and
-a real server.
+promises, which is that a historical view exists only on one player's screen. That needs two
+accounts and a real server.
 
-Every bug found in TimeLens so far — CoreProtect mutating the action list it is handed, the view
-radius being far smaller than real builds, doors rendering without their upper half — got past
-both unit tests and code review, and was caught only by running the plugin. Treat this checklist
-as part of the work, not as a formality afterwards.
+Every defect found in TimeLens so far got past both unit tests and code review, and was caught
+only by running the plugin. That includes CoreProtect mutating the action list it is handed, the
+view radius being far smaller than real builds, and doors rendering without their upper half.
+Treat this checklist as part of the work, not as a formality afterwards.
 
 Run all of it before tagging a release.
 
@@ -18,9 +18,9 @@ Fill this in as you go. Everything above the line is the alpha.1 gate.
 | Test | Expected | Result |
 |---|---|---|
 | A enters historical view | A sees past | |
-| B stands beside A | **B sees present** | |
+| B stands beside A | **B sees the present** | |
 | B modifies unrelated block | B remains normal | |
-| B modifies A's faked coordinate | *observe what A receives* | |
+| B modifies a coordinate A is faking | *observe what A receives* | |
 | A exits | current real state restored | |
 | ~1k blocks rendered | no meaningful hitch | |
 | ~5k blocks rendered | record hitch / MSPT | |
@@ -41,12 +41,12 @@ versus `12k -> client freezes for two seconds`. If 12k is bad, lower the cap. Do
 optimisation project around a number chosen by hand.
 
 **Do the isolation test first.** If A sees the past while B sees the present, the single most
-important promise of TimeLens is proven and everything else is detail.
+important promise of TimeLens is proven, and everything else is detail.
 
 ## Setup
 
-- Paper 1.21.11, CoreProtect 24.0+ (the release jar, **not** the Maven artifact — that one is a
-  dev build and refuses to enable)
+- Paper 1.21.11 and CoreProtect 24.0 or newer. Use the release jar, **not** the Maven artifact,
+  which is a development build and refuses to enable.
 - Two accounts, A and B
 - CoreProtect must already hold history for the period you test
 
@@ -55,19 +55,19 @@ important promise of TimeLens is proven and everything else is detail.
 The single most important test. If this fails, nothing else matters.
 
 - [ ] A runs `/timelens 7d`
-- [ ] B stands next to A and sees **absolutely no change** — the real, current world
+- [ ] B stands next to A and sees **absolutely no change**, the real, current world
 - [ ] B can break and place blocks normally while A is viewing
 - [ ] A exits and sees the world as it is now, **including B's changes**
 
-## 2. Live mutation while viewing — the biggest open question
+## 2. Live mutation while viewing, the biggest open question
 
 Exit must restore what is really there now, not a cached snapshot from when the view opened.
 But there is a second, sharper question hiding in the same scenario.
 
 **The concern.** When B changes a block, the server sends a block update to everyone tracking
-that chunk — including A. That update carries the *real* block. If it lands on a coordinate
-TimeLens is faking for A, it will overwrite the fake state and A's view silently develops holes.
-Nothing in TimeLens intercepts outgoing packets, so there is no mechanism preventing this.
+that chunk, including A. That update carries the *real* block. If it lands on a coordinate
+TimeLens is faking for A, it will overwrite the fake state and A's view will silently develop
+holes. Nothing in TimeLens intercepts outgoing packets, so there is no mechanism preventing this.
 
 Expect it to happen. The test is to confirm whether it does, and how visible it is.
 
@@ -75,7 +75,7 @@ Expect it to happen. The test is to confirm whether it does, and how visible it 
 - [ ] B places dirt at exactly that coordinate
 - [ ] **Does A's historical STONE survive, or does it become DIRT?**
 - [ ] Repeat with B *breaking* a block that A sees as present
-- [ ] A runs `/timelens exit` — A must see B's **current** state either way
+- [ ] A runs `/timelens exit`, A must see B's **current** state either way
 
 If the fake state is overwritten, do not reach for packet interception, and do not reach for
 self-healing either. Re-sending the one coordinate is easy; reliably detecting *every* way the
@@ -88,16 +88,16 @@ them means building a second change-tracking system purely to maintain an illusi
     TimeLens › The viewed area changed in the present world.
     TimeLens › Historical view closed to prevent visual inconsistencies.
 
-Honest, bounded, and impossible to get subtly wrong. Self-healing sessions can come later, once
-the update behaviour is properly understood. Implement only after the test shows what actually
-happens.
+This is honest, bounded, and impossible to get subtly wrong. Self-healing sessions can come
+later, once the update behaviour is properly understood. Implement only after the test shows what
+actually happens.
 
 ## 2b. Chunk and state refresh
 
 Related, and worth watching for throughout every other test:
 
-- [ ] Does any ordinary server-side refresh — chunk reload, a neighbouring block update, light
-      recalculation, a `/reload` — erase parts of A's snapshot?
+- [ ] Does any ordinary server-side refresh erase parts of A's snapshot? Chunk reloads,
+      neighbouring block updates, light recalculation and `/reload` are all worth trying.
 - [ ] Does walking to the edge of view distance and back restore real blocks?
 
 ## 3. Async races
@@ -108,20 +108,20 @@ Each of these interrupts a request mid-flight. None may error, and none may rend
 - [ ] `/timelens 30d 96`, then teleport away before it completes
 - [ ] `/timelens 30d 96`, then change world before it completes
 - [ ] `/timelens 30d 96`, then `/timelens exit` while still loading
-- [ ] `/timelens 7d` twice in quick succession — the second must be refused, not queued
+- [ ] `/timelens 7d` twice in quick succession. The second must be refused, not queued
 - [ ] Console stays clean throughout
 
 ## 4. Real structures
 
 Build, break and re-place each of these, then view across the change.
 
-- [ ] Doors — both halves, not a floating bottom
-- [ ] Beds — both halves
+- [ ] Doors, showing both halves rather than a floating bottom
+- [ ] Beds, showing both halves
 - [ ] Double chests
-- [ ] Waterlogged blocks — stairs and slabs under water
-- [ ] Signs — text may not survive; confirm it fails gracefully
-- [ ] Stairs, trapdoors, fences, slabs — these carry a `half` or shape but are single blocks and
-      must **not** gain a phantom partner
+- [ ] Waterlogged blocks, such as stairs and slabs under water
+- [ ] Signs. The text may not survive, so confirm that it fails gracefully
+- [ ] Stairs, trapdoors, fences and slabs. These carry a `half` or a shape but occupy one block
+      each, so they must **not** gain a phantom partner
 - [ ] Tall grass, sunflowers
 - [ ] A block replaced several times within one second
 
@@ -139,7 +139,7 @@ Prepare cost, on the **main thread**, over 40 runs each. One tick is 50 ms.
 
 Lookup, which runs **off** the main thread: 31–40 ms for 2,500–4,100 events.
 
-### Client and network cost — NOT yet measured
+### Client and network cost, not yet measured
 
 The figures above are server preparation only. `sendMultiBlockChange` is one call on the server,
 but it becomes a packet per chunk section on the wire, and the client has to apply and re-light
@@ -157,19 +157,19 @@ Test at increasing sizes and watch **both** clients:
 - [ ] B's client is completely unaffected at every size
 - [ ] Server MSPT stays flat
 
-If A hitches badly at 12,000, the cap is too high — lower it, do not try to make the send
+If A hitches badly at 12,000, the cap is too high. Lower it rather than trying to make the send
 cheaper.
 
-Measured on Paper 1.21.11 against a real CoreProtect database. Worst case is what matters — the
-best figure flatters a warmed JIT, and Minecraft performance complaints come from spikes. At
+Measured on Paper 1.21.11 against a real CoreProtect database. Worst case is what matters, since
+the best figure flatters a warmed JIT and Minecraft performance complaints come from spikes. At
 roughly 1.2 microseconds per block at the worst observed rate, the 12,000-block render cap works
-out to about 14 ms, under a third of a tick.
+out to about 14 ms, which is under a third of a tick.
 
 Record median and worst, not just best, whenever you re-run this.
 
 - [ ] A request over `maximum-results` is **refused**, not rendered
 
-### Benchmark invariants — a run that renders nothing is a FAILURE
+### Benchmark invariants, because a run that renders nothing is a failure
 
 Two performance runs during development reported clean passes while measuring nothing at all.
 With nobody online Paper unloads chunks immediately, TimeLens correctly skipped every position as
@@ -206,5 +206,5 @@ This test exists to prove that stays true.
 
 Confirm the world itself was never touched:
 
-- [ ] Walk the tested area — no block differs from what you and B actually built
-- [ ] `/co lookup` in the tested area — no TimeLens entries, no rollbacks
+- [ ] Walk the tested area, confirming no block differs from what you and B actually built
+- [ ] `/co lookup` in the tested area, confirming no TimeLens entries and no rollbacks

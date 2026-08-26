@@ -1,0 +1,5 @@
+name: TimeLensHarness
+version: 1.0.0
+main: harness.TimeLensHarness
+api-version: '1.21.11'
+depend: [TimeLens, CoreProtect]

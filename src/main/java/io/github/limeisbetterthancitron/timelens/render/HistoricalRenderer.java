@@ -42,9 +42,10 @@ public final class HistoricalRenderer {
      * unique positions plus a derived partner each. Since main-thread cost scales with rendered
      * blocks rather than with rows, the row limit alone cannot bound it.
      *
-     * <p>Measured at roughly 1.8 microseconds per block, so this caps a view at about a quarter
-     * of a tick before partners are added. Not configurable: it protects the server rather than
-     * expressing a preference.
+     * <p>Measured at 0.5 to 1.2 microseconds per block, so this caps preparation at roughly a
+     * third of a tick at the worst observed rate. It does not bound what the packet costs the
+     * client, which is a separate question and not yet measured. Not configurable: it protects
+     * the server rather than expressing a preference.
      */
     public static final int MAX_RENDER_POSITIONS = 12_000;
 
